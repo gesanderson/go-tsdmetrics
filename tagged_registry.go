@@ -179,12 +179,18 @@ func (r *DefaultTaggedRegistry) registered() map[string]map[TagsID]TaggedMetric 
 	defer r.mutex.Unlock()
 	metrics := make(map[string]map[TagsID]TaggedMetric, len(r.metrics))
 	for name, i := range r.metrics {
-		metrics[name] = i
+		metrics[name] = make(map[TagsID]TaggedMetric)
+		for tag, m := range i {
+			metrics[name][tag] = m
+		}
 	}
 
 	// Additional metrics
 	for name, i := range r.additionalMetrics {
-		metrics[name] = i
+		metrics[name] = make(map[TagsID]TaggedMetric)
+		for tag, m := range i {
+			metrics[name][tag] = m
+		}
 	}
 	r.additionalMetrics = make(map[string]map[TagsID]TaggedMetric)
 
