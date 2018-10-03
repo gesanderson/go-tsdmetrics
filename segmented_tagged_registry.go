@@ -118,6 +118,11 @@ func (r *SegmentedTaggedRegistry) Unregister(name string, tags Tags) {
 	r.parent.Unregister(name, tags)
 }
 
+// Unregister the metric using the Metric object itself.
+func (r *SegmentedTaggedRegistry) UnregisterMetric(i interface{}) {
+	r.parent.UnregisterMetric(i)
+}
+
 // Unregister all metrics.  (Mostly for testing.)
 func (r *SegmentedTaggedRegistry) UnregisterAll() {
 	r.parent.UnregisterAll()

@@ -70,6 +70,11 @@ func (r *PrefixedTaggedRegistry) Unregister(name string, tags Tags) {
 	r.underlying.Unregister(name, tags)
 }
 
+// Unregister the metric using the Metric object itself.
+func (r *PrefixedTaggedRegistry) UnregisterMetric(i interface{}) {
+	r.underlying.UnregisterMetric(i)
+}
+
 // Unregister all metrics.  (Mostly for testing.)
 func (r *PrefixedTaggedRegistry) UnregisterAll() {
 	r.underlying.UnregisterAll()

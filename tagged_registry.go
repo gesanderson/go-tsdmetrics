@@ -35,6 +35,9 @@ type TaggedRegistry interface {
 	// Unregister the metric with the given name.
 	Unregister(string, Tags)
 
+	// Unregister the metric using the Metric object itself.
+	UnregisterMetric(interface{})
+
 	// Unregister all metrics.  (Mostly for testing.)
 	UnregisterAll()
 }
@@ -144,6 +147,24 @@ func (r *DefaultTaggedRegistry) Unregister(name string, tags Tags) {
 
 		if len(t) == 0 {
 			delete(r.metrics, name)
+		}
+	}
+}
+
+// Unregister the metric using the Metric object itself.
+func (r *DefaultTaggedRegistry) UnregisterMetric(i interface{}) {
+	r.mutex.Lock()
+	defer r.mutex.Unlock()
+
+	for name, entries := range r.metrics {
+		for t, tm := range entries {
+			if tm.GetMetric() == i {
+				delete(entries, t)
+				if len(entries) == 0 {
+					delete(r.metrics, name)
+				}
+				return
+			}
 		}
 	}
 }
