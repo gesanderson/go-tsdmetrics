@@ -1,6 +1,6 @@
-package: github.com/mathpl/go-tsdmetrics
+package: github.com/gesanderson/go-tsdmetrics
 import:
 - package: github.com/sirupsen/logrus
-  version: v1.0.3
+  version: v1.0.6
 - package: github.com/rcrowley/go-metrics
-  version: 1f30fe9094a513ce4c700b9a54458bbb0c96996c
+  version: 3113b8401b8a98917cde58f8bbd42a1b1c03b1fd

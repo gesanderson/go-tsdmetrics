@@ -1,10 +1,10 @@
-hash: 71569575fbb16c33e3a56a6eff9a06ad5fbca8abf4066908897f5775c46ff7cf
-updated: 2017-09-15T14:04:50.10199388-04:00
+hash: 1bff3deeafb4aa035aa0048c5495a8063b6a7de215a36fd1014d776b5b11442a
+updated: 2018-10-24T13:00:48.670293-04:00
 imports:
 - name: github.com/rcrowley/go-metrics
-  version: 1f30fe9094a513ce4c700b9a54458bbb0c96996c
+  version: 3113b8401b8a98917cde58f8bbd42a1b1c03b1fd
 - name: github.com/sirupsen/logrus
-  version: f006c2ac4710855cf0f916dd6b77acf6b048dc6e
+  version: 3e01752db0189b9157070a0e1668a620f9a85da2
 - name: golang.org/x/crypto
   version: b0c9c05bfe149df95eb1d25642162cca051e0466
   subpackages:
