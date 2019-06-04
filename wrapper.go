@@ -10,8 +10,8 @@ import (
 )
 
 type MetricWrapper struct {
-	registry TaggedRegistry
-	openTSDB TaggedOpenTSDB
+	Registry TaggedRegistry
+	OpenTSDB TaggedOpenTSDB
 	baseName string
 	logger   logrus.FieldLogger
 }
@@ -27,10 +27,10 @@ func NewMetricWrapper(baseName string, baseTags string, addr string, flushInterv
 	logger.Infof("Root metric tags: %v", tags)
 
 	// Metrics initialization
-	w.registry = NewSegmentedTaggedRegistry("", tags, nil)
-	w.openTSDB = TaggedOpenTSDB{
+	w.Registry = NewSegmentedTaggedRegistry("", tags, nil)
+	w.OpenTSDB = TaggedOpenTSDB{
 		Addr:          addr,
-		Registry:      w.registry,
+		Registry:      w.Registry,
 		FlushInterval: time.Duration(flushInterval) * time.Second,
 		DurationUnit:  time.Millisecond,
 		Format:        Json,
@@ -38,7 +38,7 @@ func NewMetricWrapper(baseName string, baseTags string, addr string, flushInterv
 		BulkSize:      10000,
 		Logger:        logger}
 
-	go w.openTSDB.Run(context.Background())
+	go w.OpenTSDB.Run(context.Background())
 
 	return w, nil
 }
@@ -52,36 +52,36 @@ func (w *MetricWrapper) metricName(name string) string {
 
 // RegisterMemStats will send go runtime stats to opentsdb
 func (w *MetricWrapper) RegisterMemStats(tags Tags) {
-	memRegistry := NewSegmentedTaggedRegistry("", tags, w.registry)
+	memRegistry := NewSegmentedTaggedRegistry("", tags, w.Registry)
 	RegisterTaggedRuntimeMemStats(memRegistry)
 }
 
 // Gauge creates a metric gauge object
 func (w *MetricWrapper) Gauge(name string, tags Tags) metrics.Gauge {
-	return w.registry.GetOrRegister(w.metricName(name), tags, metrics.NewGauge()).(metrics.Gauge)
+	return w.Registry.GetOrRegister(w.metricName(name), tags, metrics.NewGauge()).(metrics.Gauge)
 }
 
 // GaugeFloat64 creates a float64 metric gauge object
 func (w *MetricWrapper) GaugeFloat64(name string, tags Tags) metrics.GaugeFloat64 {
-	return w.registry.GetOrRegister(w.metricName(name), tags, metrics.NewGaugeFloat64()).(metrics.GaugeFloat64)
+	return w.Registry.GetOrRegister(w.metricName(name), tags, metrics.NewGaugeFloat64()).(metrics.GaugeFloat64)
 }
 
 // Counter creates a metric counter object
 func (w *MetricWrapper) Counter(name string, tags Tags) metrics.Counter {
-	return w.registry.GetOrRegister(w.metricName(name), tags, metrics.NewCounter()).(metrics.Counter)
+	return w.Registry.GetOrRegister(w.metricName(name), tags, metrics.NewCounter()).(metrics.Counter)
 }
 
 // Histogram creates a metric histogram object
 func (w *MetricWrapper) Histogram(name string, sample metrics.Sample, tags Tags) metrics.Histogram {
-	return w.registry.GetOrRegister(w.metricName(name), tags, metrics.NewHistogram(sample)).(metrics.Histogram)
+	return w.Registry.GetOrRegister(w.metricName(name), tags, metrics.NewHistogram(sample)).(metrics.Histogram)
 }
 
 // Meter creates a metric meter object
 func (w *MetricWrapper) Meter(name string, tags Tags) metrics.Meter {
-	return w.registry.GetOrRegister(w.metricName(name), tags, metrics.NewMeter()).(metrics.Meter)
+	return w.Registry.GetOrRegister(w.metricName(name), tags, metrics.NewMeter()).(metrics.Meter)
 }
 
 // UnregisterMetric unregister metrics using the Metric object itself.
 func (w *MetricWrapper) UnregisterMetric(i interface{}) {
-	w.registry.UnregisterMetric(i)
+	w.Registry.UnregisterMetric(i)
 }
